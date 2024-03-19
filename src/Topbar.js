@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import logout from './logout';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -26,8 +27,7 @@ export default function Topbar({mode,setMode}) {
           onClick={()=>setMode(mode === "light" ? "dark" : "light")}>
            {mode === "light" ? "dark" : "light"}mode
            </Button>
-          <Button color="inherit">Login</Button>
-          
+          <Button variant="outlined" color="inherit" onClick={()=>logout()}>Logout</Button>
         </Toolbar>
       </AppBar>
     </Box>

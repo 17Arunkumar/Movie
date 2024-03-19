@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { api } from "./global";
 
 
 function Movies({pro,getmovies}){
@@ -21,7 +22,7 @@ function Movies({pro,getmovies}){
 
     const deleteMovie = (id) => {
         console.log(id);
-        fetch(`https://65f17108034bdbecc7629d11.mockapi.io/user/${id}`,{
+        fetch(`${api}/delete/${id}`,{
             method:"DELETE",
         })
         .then(()=>alert("This card gets deleted now."))
@@ -39,7 +40,7 @@ return(
             <IconButton color="primary" aria-label="Toggle-description"onClick={()=>setShow(!show)}>
                 {show ? <ExpandLessIcon fontSize="large"/> : <ExpandMoreIcon fontSize="large" /> }
             </IconButton>
-            <IconButton color="primary" aria-label="Toggle-Info" onClick={()=>navigate(`/portal/view/${pro.id}`)}>
+            <IconButton color="primary" aria-label="Toggle-Info" onClick={()=>navigate(`/portal/view/${pro._id}`)}>
                 <InfoIcon fontSize="medium"/>
             </IconButton>
             </Typography>
@@ -51,14 +52,14 @@ return(
         <IconButton
         sx={{marginLeft:"auto"}}
         aria-label="editMovie"
-        onClick={()=>navigate(`/portal/edit/${pro.id}`)}>
+        onClick={()=>navigate(`/portal/edit/${pro._id}`)}>
             <EditIcon color="secondary"/>
         </IconButton>
         <IconButton
         sx={{marginLeft:"auto"}}
         aria-label="editMovie">
             <DeleteIcon color="secondary"
-            onClick={()=>deleteMovie(pro.id)}/>
+            onClick={()=>deleteMovie(pro._id)}/>
         </IconButton>
         </CardActions>
         </Card>
@@ -66,35 +67,30 @@ return(
 }
 
 function Movie(){
-
- 
-
-    const[movie,setMovie]=useState([]);
+    let [data,setdata] = useState([])
     const getmovies=()=>{
-        fetch("https://65f17108034bdbecc7629d11.mockapi.io/user",{method:"GET",
-    })
-    .then((da)=>da.json())
-    .then((movie)=>setMovie(movie));
-};
-useEffect(()=>{
-    getmovies();
-},[]);
+        fetch(`${api}/get`,{
+            headers:{"backend-token":localStorage['backend-token']}
+        }).then((das)=>das.json())
+        .then((da)=>{setdata(da)
+        console.log(da)})
+       
+    } 
+
+    useEffect(()=>{
+        getmovies();
+    },[])
+
     return(
-         
         <div className="movie-list">
-            
-               { movie.map((list,index) => (
-                    
-
-                    <Movies pro={list} key={index} getmovies={getmovies}/>
-
-                    
-                ))
-               }
-        </div>
-
+        {data.map((element,index)=>(
+            <Movies pro={element} key={index} getmovies={getmovies}/>
+    ))}
+    </div>
+        
     )
-        }
+}
+
 
 
 
