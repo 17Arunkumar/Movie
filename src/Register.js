@@ -3,9 +3,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from 'formik';
 import * as yup from "yup";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { api } from './global';
 export default function Register() {
   
+    const navigate=useNavigate();
+
     const movievalidation=yup.object({
         username:yup.string().required(),
         email:yup.string().required().email(),
@@ -19,9 +22,20 @@ export default function Register() {
     },
     validationSchema:movievalidation,
     onSubmit:(values)=>{
-        console.log(values);
+      //console.log(values);
+        register(values);
     }
   });
+
+   const register=(values)=>{
+    fetch(`${api}/register`,{
+      method:'POST',
+      body:JSON.stringify(values),
+      headers:{"Content-Type":"application/json"},
+    })
+    .then(()=> alert("successfully registered"))
+    .then(()=>navigate("/login"));
+   }
   return (
     <div>
          <form className='addform' onSubmit={formik.handleSubmit}>
